@@ -1,10 +1,12 @@
 export class SelectItem {
   public id:string;
   public text:string;
+  public source: any;
   public children:Array<SelectItem>;
   public parent:SelectItem;
 
   constructor(source:any) {
+    this.source = source;
     if (typeof source === 'string') {
       this.id = this.text = source;
     }

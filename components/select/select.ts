@@ -1,16 +1,4 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ElementRef
-} from 'angular2/core';
-import {
-  CORE_DIRECTIVES,
-  FORM_DIRECTIVES,
-  NgClass,
-  NgStyle
-} from 'angular2/common';
+import {Component, Input, Output, EventEmitter, ElementRef} from 'angular2/core';
 import {SelectItem} from './select-item';
 import {HightlightPipe} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';
@@ -57,6 +45,7 @@ let optionsTemplate = `
   template: `
   <div tabindex="0"
      *ngIf="multiple === false"
+     (click)="matchClick(null)"
      (keyup)="mainClick($event)"
      class="ui-select-container ui-select-bootstrap dropdown open">
     <div [ngClass]="{'ui-disabled': disabled}"></div>
@@ -134,6 +123,8 @@ export class Select {
   @Input() set items(value:Array<any>) {
     this._items = value;
     this.itemObjects = this._items.map((item:any) => new SelectItem(item));
+    this.behavior = this.itemObjects && this.itemObjects.length > 0 && this.itemObjects[0].hasChildren() ?
+      this.childrenBehavior : this.genericBehavior;
   }
 
   @Input() set disabled(value:boolean) {
@@ -159,10 +150,12 @@ export class Select {
   private offSideClickHandler:any;
   private inputMode:boolean = false;
   private optionsOpened:boolean = false;
-  private behavior:IOptionsBehavior;
   private inputValue:string = '';
   private _items:Array<any> = [];
   private _disabled:boolean = false;
+  private childrenBehavior = new ChildrenBehavior(this);
+  private genericBehavior = new GenericBehavior(this);
+  private behavior:IOptionsBehavior = this.childrenBehavior;
 
   constructor(public element:ElementRef) {
   }
@@ -233,8 +226,6 @@ export class Select {
   }
 
   ngOnInit() {
-    this.behavior = this.itemObjects[0].hasChildren() ?
-      new ChildrenBehavior(this) : new GenericBehavior(this);
     this.offSideClickHandler = this.getOffSideClickHandler(this);
     document.addEventListener('click', this.offSideClickHandler);
 
@@ -258,9 +249,6 @@ export class Select {
 
       if (e.srcElement && e.srcElement.className &&
         e.srcElement.className.indexOf('ui-select') >= 0) {
-        if (e.target.nodeName !== 'INPUT') {
-          context.matchClick(null);
-        }
         return;
       }
 
