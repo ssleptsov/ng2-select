@@ -115,14 +115,14 @@ export class Select {
   allowClear:boolean = false;
   @Input()
   placeholder:string = '';
-  @Input()
   @Input() set initData(value:Array<any>) {
-    console.log('set this.initData');
     this._initData = value;
     if (this._initData.length) {
       this.active = this._initData.map(d => new SelectItem(d));
-      this.data.emit(this.active);
+    }else{
+      this.active = [];
     }
+    this.data.emit(this.active);
   }
   @Input()
   multiple:boolean = false;
