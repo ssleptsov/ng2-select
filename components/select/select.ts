@@ -116,7 +116,14 @@ export class Select {
   @Input()
   placeholder:string = '';
   @Input()
-  initData:Array<any> = [];
+  @Input() set initData(value:Array<any>) {
+    console.log('set this.initData');
+    this._initData = value;
+    if (this._initData.length) {
+      this.active = this._initData.map(d => new SelectItem(d));
+      this.data.emit(this.active);
+    }
+  }
   @Input()
   multiple:boolean = false;
 
@@ -152,6 +159,7 @@ export class Select {
   private optionsOpened:boolean = false;
   private inputValue:string = '';
   private _items:Array<any> = [];
+  private _initData:Array<any> = [];
   private _disabled:boolean = false;
   private childrenBehavior = new ChildrenBehavior(this);
   private genericBehavior = new GenericBehavior(this);
@@ -229,8 +237,8 @@ export class Select {
     this.offSideClickHandler = this.getOffSideClickHandler(this);
     document.addEventListener('click', this.offSideClickHandler);
 
-    if (this.initData) {
-      this.active = this.initData.map(d => new SelectItem(d));
+    if (this._initData) {
+      this.active = this._initData.map(d => new SelectItem(d));
       this.data.emit(this.active);
     }
   }
