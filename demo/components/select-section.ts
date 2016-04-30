@@ -3,9 +3,10 @@ import {CORE_DIRECTIVES} from 'angular2/common';
 
 import {TAB_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 
-import {SingleDemo} from './select/single-demo';
-import {MultipleDemo} from './select/multiple-demo';
-import {ChildrenDemo} from './select/children-demo';
+import {SingleDemoComponent} from './select/single-demo';
+import {MultipleDemoComponent} from './select/multiple-demo';
+import {ChildrenDemoComponent} from './select/children-demo';
+import {RichDemoComponent} from './select/rich-demo';
 
 let name = 'Select';
 // webpack html imports
@@ -26,11 +27,16 @@ let tabDesc:Array<any> = [
     heading: 'Children',
     ts: require('!!prismjs?lang=typescript!./select/children-demo.ts'),
     html: require('!!prismjs?lang=markup!./select/children-demo.html')
+  },
+  {
+    heading: 'Rich',
+    ts: require('!!prismjs?lang=typescript!./select/rich-demo.ts'),
+    html: require('!!prismjs?lang=markup!./select/rich-demo.html')
   }
 ];
 
 let tabsContent:string = ``;
-tabDesc.forEach(desc => {
+tabDesc.forEach((desc:any) => {
   tabsContent += `
   <div *ngIf="currentHeading === '${desc.heading}'">
     <${desc.heading.toLowerCase()}-demo>
@@ -80,12 +86,12 @@ tabDesc.forEach(desc => {
     </div>
   </section>
   `,
-  directives: [SingleDemo, MultipleDemo, ChildrenDemo, TAB_DIRECTIVES, CORE_DIRECTIVES]
+  directives: [SingleDemoComponent, MultipleDemoComponent, ChildrenDemoComponent, RichDemoComponent, TAB_DIRECTIVES, CORE_DIRECTIVES]
 })
-export class SelectSection {
+export class SelectSectionComponent {
   public currentHeading:string = 'Single';
 
-  public select_zzz(e:any) {
+  public select_zzz(e:any):void {
     if (e.heading) {
       this.currentHeading = e.heading;
     }

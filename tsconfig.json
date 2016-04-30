@@ -1,11 +1,12 @@
 {
-  "version": "1.7.5",
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "sourceMap": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "noEmitHelpers": true,
     "declaration": true,
-    "removeComments": true,
+    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
@@ -13,9 +14,22 @@
     "noLib": false
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "typings/main.d.ts",
+    "typings/main"
   ],
-  "files": [
-    "./ng2-select.ts"
-  ]
+  "filesGlob": [
+    "./components/**/*.spec.ts",
+    "!./node_modules/**/*.ts",
+    "./ng2-select.ts",
+    "typings/browser.d.ts"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "resolveGlobs": true,
+    "forkChecker": true
+  },
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "atom": { "rewriteTsconfig": false }
 }
+
