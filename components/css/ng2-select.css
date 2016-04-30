@@ -249,6 +249,10 @@ body > .ui-select-bootstrap.open {
     background-color: #428bca;
 }
 
+.ui-select-bootstrap .ui-select-choices-row.active>a:hover{
+  text-decoration: none;
+}
+
 .ui-select-bootstrap .ui-select-choices-row.disabled>a,
 .ui-select-bootstrap .ui-select-choices-row.active.disabled>a {
     color: #777;

@@ -62,7 +62,7 @@ let optionsTemplate = `
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" style="margin-right: 10px; padding: 0;"
           (click)="remove(activeOption)" class="btn btn-xs btn-link pull-right">
-          <i class="glyphicon glyphicon-remove"></i>
+          &times;
         </a>
       </span>
     </div>
