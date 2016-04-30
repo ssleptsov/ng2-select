@@ -171,8 +171,10 @@ export class Select {
   private focusToInput(value:string = '') {
     setTimeout(() => {
       let el = this.element.nativeElement.querySelector('div.ui-select-container > input');
-      el.focus();
-      el.value = value;
+      if (el){
+        el.focus();
+        el.value = value;
+      }
     }, 0);
   }
 
