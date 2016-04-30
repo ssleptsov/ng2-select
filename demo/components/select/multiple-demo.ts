@@ -12,8 +12,11 @@ let template = require('./multiple-demo.html');
   template: template,
   directives: [SELECT_DIRECTIVES, NgClass, CORE_DIRECTIVES, FORM_DIRECTIVES, ButtonCheckbox]
 })
-export class MultipleDemoComponent {
-  public items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
+export class MultipleDemo {
+  private value:any = ['Athens'];
+  private _disabledV:string = '0';
+  private disabled:boolean = false;
+  private items:Array<string> = ['Amsterdam', 'Antwerp', 'Athens', 'Barcelona',
     'Berlin', 'Birmingham', 'Bradford', 'Bremen', 'Brussels', 'Bucharest',
     'Budapest', 'Cologne', 'Copenhagen', 'Dortmund', 'Dresden', 'Dublin', 'Düsseldorf',
     'Essen', 'Frankfurt', 'Genoa', 'Glasgow', 'Gothenburg', 'Hamburg', 'Hannover',
@@ -22,10 +25,6 @@ export class MultipleDemoComponent {
     'Paris', 'Poznań', 'Prague', 'Riga', 'Rome', 'Rotterdam', 'Seville', 'Sheffield',
     'Sofia', 'Stockholm', 'Stuttgart', 'The Hague', 'Turin', 'Valencia', 'Vienna',
     'Vilnius', 'Warsaw', 'Wrocław', 'Zagreb', 'Zaragoza'];
-
-  private value:any = ['Athens'];
-  private _disabledV:string = '0';
-  private disabled:boolean = false;
 
   private get disabledV():string {
     return this._disabledV;
@@ -36,21 +35,21 @@ export class MultipleDemoComponent {
     this.disabled = this._disabledV === '1';
   }
 
-  public selected(value:any):void {
+  private selected(value:any) {
     console.log('Selected value is: ', value);
   }
 
-  public removed(value:any):void {
+  private removed(value:any) {
     console.log('Removed value is: ', value);
   }
 
-  public refreshValue(value:any):void {
+  private refreshValue(value:any) {
     this.value = value;
   }
 
-  public itemsToString(value:Array<any> = []):string {
+  private itemsToString(value:Array<any> = []) {
     return value
-      .map((item:any) => {
+      .map(item => {
       return item.text;
     }).join(',');
   }

@@ -1,16 +1,20 @@
 export class SelectItem {
   public id:string;
   public text:string;
+  public source: any;
   public children:Array<SelectItem>;
   public parent:SelectItem;
 
-  public constructor(source:any) {
+  constructor(source:any) {
+    this.source = source;
     if (typeof source === 'string') {
       this.id = this.text = source;
     }
+
     if (typeof source === 'object') {
       this.id = source.id || source.text;
       this.text = source.text;
+
       if (source.children && source.text) {
         this.children = source.children.map((c:any) => {
           let r:SelectItem = new SelectItem(c);
@@ -24,9 +28,10 @@ export class SelectItem {
 
   public fillChildrenHash(optionsMap:Map<string, number>, startIndex:number):number {
     let i = startIndex;
-    this.children.map((child:SelectItem) => {
+    this.children.map(child => {
       optionsMap.set(child.id, i++);
     });
+
     return i;
   }
 

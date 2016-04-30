@@ -1,35 +1,35 @@
-/* eslint global-require: 0 */
-'use strict';
+var path = require('path');
+var marked = require('marked');
+var webpack = require('webpack');
 
-const path = require('path');
-const marked = require('marked');
-const webpack = require('webpack');
-const reqPrism = require('prismjs');
-const CompressionPlugin = require('compression-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+var Clean = require('clean-webpack-plugin');
+var CompressionPlugin = require('compression-webpack-plugin');
 
 // marked renderer hack
-marked.Renderer.prototype.code = function renderCode(code, lang) {
-  const out = this.options.highlight(code, lang);
-  const classMap = this.options.langPrefix + lang;
+marked.Renderer.prototype.code = function (code, lang) {
+  var out = this.options.highlight(code, lang);
 
   if (!lang) {
-    return `<pre><code>${out}\n</code></pre>`;
+    return '<pre><code>' + out + '\n</code></pre>';
   }
-  return `<pre class="${classMap}"><code class="${classMap}">${out}\n</code></pre>\n`;
+
+  var classMap = this.options.langPrefix + lang;
+  return '<pre class="' + classMap + '"><code class="' + classMap + '">' + out + '\n</code></pre>\n';
 };
 
 /*eslint no-process-env:0, camelcase:0*/
-const isProduction = (process.env.NODE_ENV || 'development') === 'production';
-const devtool = process.env.NODE_ENV === 'test' ? 'inline-source-map' : 'source-map';
-const dest = 'demo-build';
-const absDest = root(dest);
+var isProduction = (process.env.NODE_ENV || 'development') === 'production';
 
-const config = {
+var src = 'demo';
+//var absSrc = path.join(__dirname, src);
+var dest = '/build';
+var absDest = path.join(__dirname, dest);
+
+var config = {
   // isProduction ? 'source-map' : 'evale',
-  devtool,
-  debug: false,
+  devtool: 'source-map',
+  debug: true,
+  cache: true,
 
   verbose: true,
   displayErrorDetails: true,
@@ -40,20 +40,18 @@ const config = {
   },
 
   resolve: {
-    cache: false,
     root: __dirname,
-    extensions: ['', '.ts', '.js', '.json']
+    extensions: ['', '.ts', '.js', '.json'],
+    alias: {}
   },
 
   entry: {
     angular2: [
       // Angular 2 Deps
-      'core-js/es6',
-      'core-js/es7/reflect',
-      'zone.js',
-      'angular2/common',
+      'zone.js/dist/zone-microtask',
+      'reflect-metadata',
       'angular2/core',
-      'ts-helpers'
+      'angular2/common'
     ],
     'angular2-select': ['ng2-select'],
     'angular2-select-demo': 'demo'
@@ -71,20 +69,20 @@ const config = {
     inline: true,
     colors: true,
     historyApiFallback: true,
-    contentBase: dest,
-    //publicPath: dest,
-    outputPath: dest,
-    watchOptions: {aggregateTimeout: 300, poll: 1000}
+    contentBase: src,
+    publicPath: dest
   },
 
   markdownLoader: {
     langPrefix: 'language-',
-    highlight(code, lang) {
-      const language = !lang || lang === 'html' ? 'markup' : lang;
-      const Prism = global.Prism || reqPrism;
-
+    highlight: function (code, lang) {
+      var language = !lang || lang === 'html' ? 'markup' : lang;
+      if (!global.Prism) {
+        global.Prism = require('prismjs');
+      }
+      var Prism = global.Prism;
       if (!Prism.languages[language]) {
-        require(`prismjs/components/prism-${language}.js`);
+        require('prismjs/components/prism-' + language + '.js');
       }
       return Prism.highlight(code, Prism.languages[language]);
     }
@@ -93,65 +91,64 @@ const config = {
     loaders: [
       // support markdown
       {test: /\.md$/, loader: 'html?minimize=false!markdown'},
+
       // Support for *.json files.
       {test: /\.json$/, loader: 'json'},
+
       // Support for CSS as raw text
       {test: /\.css$/, loader: 'raw'},
+
       // support for .html as raw text
       {test: /\.html$/, loader: 'raw'},
+
       // Support for .ts files.
       {
         test: /\.ts$/,
         loader: 'ts',
-        query: {
-          compilerOptions: {
-            removeComments: true,
-            noEmitHelpers: false
-          }
-        },
-        exclude: [/\.(spec|e2e)\.ts$/]
+        exclude: [
+          /\.min\.js$/,
+          /\.spec\.ts$/,
+          /\.e2e\.ts$/,
+          /web_modules/,
+          /test/
+        ]
       }
     ],
     noParse: [
       /rtts_assert\/src\/rtts_assert/,
-      /reflect-metadata/,
-      /zone\.js\/dist\/zone-microtask/
+      /reflect-metadata/
     ]
   },
 
   plugins: [
-    //new Clean([dest]),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(true),
+    new Clean(['build']),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'angular2',
       minChunks: Infinity,
       filename: 'angular2.js'
     }),
-    // static assets
-    new CopyWebpackPlugin([{from: 'demo/favicon.ico', to: 'favicon.ico'}]),
-    new CopyWebpackPlugin([{from: 'demo/assets', to: 'assets'}]),
-    // generating html
-    new HtmlWebpackPlugin({template: 'demo/index.html'})
+    new webpack.optimize.DedupePlugin({
+      __isProduction: isProduction
+    }),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin()
   ],
-  pushPlugins() {
+  pushPlugins: function () {
     if (!isProduction) {
       return;
     }
-    const plugins = [
+
+    this.plugins.push.apply(this.plugins, [
       //production only
       new webpack.optimize.UglifyJsPlugin({
-        beautify: false,
-        mangle: false,
-        comments: false,
         compress: {
-          screw_ie8: true
-          //warnings: false,
-          //drop_debugger: false
-        }
-        //verbose: true,
-        //beautify: false,
-        //quote_style: 3
+          warnings: false,
+          drop_debugger: false
+        },
+        output: {
+          comments: false
+        },
+        beautify: false
       }),
       new CompressionPlugin({
         asset: '{file}.gz',
@@ -160,19 +157,10 @@ const config = {
         threshold: 10240,
         minRatio: 0.8
       })
-    ];
-
-    this
-      .plugins
-      .push
-      .apply(plugins);
+    ]);
   }
 };
 
 config.pushPlugins();
 
 module.exports = config;
-
-function root(partialPath) {
-  return path.join(__dirname, partialPath);
-}

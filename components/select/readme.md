@@ -7,7 +7,7 @@ import {SELECT_DIRECTIVES} from 'ng2-select/ng2-select';
 ```typescript
 // class Select
 @Component({
-  selector: 'ng-select',
+  selector: 'ng2-select',
   properties: [
     'allowClear',
     'placeholder',
