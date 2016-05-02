@@ -119,6 +119,7 @@ export class Select {
     this._initData = value;
     if (this._initData.length) {
       this.active = this._initData.map(d => new SelectItem(d));
+      this.activeOption = this.active[0];
     }else{
       this.active = [];
     }
