@@ -134,6 +134,9 @@ export class Select {
       this.childrenBehavior : this.genericBehavior;
   }
 
+  get disabled() {
+    return this._disabled;
+  }
   @Input() set disabled(value:boolean) {
     this._disabled = value;
     if (this._disabled === true) {
