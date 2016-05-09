@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ElementRef} from 'angular2/core';
+import {Component, Input, Output, EventEmitter, ElementRef} from '@angular2/core';
 import {SelectItem} from './select-item';
 import {HightlightPipe} from './select-pipes';
 import {IOptionsBehavior} from './select-interfaces';

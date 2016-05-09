@@ -1,6 +1,6 @@
 {
   "name": "ng2-select",
-  "version": "1.0.1-beta.0",
+  "version": "1.0.2-beta.0",
   "description": "Angular2 based replacement for select boxes",
   "scripts": {
     "deploy": "NODE_ENV=production webpack -p --progress --color --optimize-minimize --optimize-dedupe --optimize-occurence-order",
@@ -27,13 +27,15 @@
     "url": "https://github.com/valor-software/ng2-select/issues"
   },
   "homepage": "https://github.com/valor-software/ng2-select#readme",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
-    "angular2": "2.0.0-beta.1",
+    "@angular/common": "^2.0.0-rc.1",
+    "@angular/core": "^2.0.0-rc.1",
     "bootstrap": "3.3.6",
     "clean-webpack-plugin": "0.1.6",
     "compression-webpack-plugin": "0.2.0",
-    "es6-shim": "0.33.13",
+    "es6-shim": "0.35.0",
     "eslint": "1.10.3",
     "exports-loader": "0.6.2",
     "file-loader": "0.8.5",
@@ -54,13 +56,13 @@
     "raw-loader": "0.5.1",
     "reflect-metadata": "0.1.2",
     "require-dir": "0.3.0",
-    "rxjs": "5.0.0-beta.0",
+    "rxjs": "5.0.0-beta.6",
     "ts-loader": "0.7.2",
     "tslint": "3.2.2",
     "typescript": "1.7.5",
     "webpack": "1.12.10",
     "webpack-dev-server": "1.14.0",
-    "zone.js": "0.5.10"
+    "zone.js": "0.6.12"
   },
   "contributors": [
     {
